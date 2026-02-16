@@ -1,6 +1,5 @@
 services:
   nodebb:
-    build: .
     image: <<your_username>>/nodebb:${IMAGE_TAG:-latest}
     restart: unless-stopped
     ports:
@@ -9,7 +8,6 @@ services:
       - nodebb-build:/usr/src/app/build
       - nodebb-uploads:/usr/src/app/public/uploads
       - nodebb-config:/opt/config
-      - ./install/docker/setup.json:/usr/src/app/setup.json
 
   postgres:
     image: postgres:16-alpine
@@ -28,41 +26,10 @@ services:
     # command: ["redis-server", "--save", "60", "1", "--loglevel", "warning"] # uncomment if you want to use snapshotting instead of AOF
     volumes:
       - redis-data:/data
-    profiles:
-      - redis
 
 volumes:
   postgres-data:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./.docker/database/postgresql/data
-
   redis-data:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./.docker/database/redis
-
   nodebb-build:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./.docker/build
-
   nodebb-uploads:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./.docker/public/uploads
-
   nodebb-config:
-    driver: local
-    driver_opts:
-      o: bind
-      type: none
-      device: ./.docker/config
